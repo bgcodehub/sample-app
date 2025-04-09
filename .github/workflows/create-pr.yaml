@@ -25,6 +25,7 @@ jobs:
         run: |
           echo "ACTOR_NAME=${{ github.actor }}" >> $GITHUB_ENV
           echo "ITEM=${{ github.event.inputs.item }}" >> $GITHUB_ENV
+          echo "SANITIZED_ITEM=$(echo '${{ github.event.inputs.item }}' | sed 's/ /-/g')" >> $GITHUB_ENV
 
       - name: Add item to todo list
         run: echo "${{ github.event.inputs.item }}" >> todo.txt
@@ -43,7 +44,7 @@ jobs:
         run: |
           git config user.name "$ACTOR_NAME"
           git config user.email "${ACTOR_NAME}@users.noreply.github.com"
-          BRANCH_NAME="todo-update-${ITEM}-${{ github.run_id }}"
+          BRANCH_NAME="todo-update-${SANITIZED_ITEM}-${{ github.run_id }}"
           git checkout -b "$BRANCH_NAME"
           git add todo.txt
           git commit -m "Add '$ITEM' to todo list by @$ACTOR_NAME"
@@ -64,7 +65,7 @@ jobs:
 
           PR_URL=$(gh pr create \
             --base main \
-            --head "todo-update-${ITEM}-${{ github.run_id }}" \
+            --head "todo-update-${SANITIZED_ITEM}-${{ github.run_id }}" \
             --title "Add '$ITEM' to todo list by @$ACTOR_NAME" \
             --body "$PR_BODY" | grep -Eo 'https://github.com/[^ ]+')
 
