@@ -8,9 +8,9 @@ on:
         required: true
         default: 'guest'
 
-  jobs:
-    greet:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Say Hello
-          run: echo "Hello, ${{ github.event.inputs.username }}! Welcome to Chick-fil-A's cloud automation!"
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello
+        run: echo "Hello, ${{ github.event.inputs.username }}! Welcome to Chick-fil-A’s cloud automation!"
