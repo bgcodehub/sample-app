@@ -12,6 +12,7 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       contents: write
       pull-requests: write
 
@@ -57,10 +58,10 @@ jobs:
         run: |
           PR_BODY="**Todo List Update**
 
-          - **Triggered by:** @$ACTOR_NAME
-          - **Item Added:** $ITEM
+          - **Triggered by:** @$ACTOR_NAME  
+          - **Item Added:** $ITEM  
 
-          **Details:**
+          **Details:**  
           - Adds '$ITEM' to todo.txt for review."
 
           PR_URL=$(gh pr create \
@@ -69,4 +70,7 @@ jobs:
             --title "Add '$ITEM' to todo list by @$ACTOR_NAME" \
             --body "$PR_BODY" | grep -Eo 'https://github.com/[^ ]+')
 
-          echo "PR created at: $PR_URL"
+          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+
+      - name: Notify user
+        run: echo "Pull request created successfully at $PR_URL"
